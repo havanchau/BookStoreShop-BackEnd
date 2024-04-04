@@ -115,7 +115,7 @@ class Customer {
 
     static updateInfoCustomer(customer, result) {
         const {id, name, physicalAddress, email, totalPayment} = customer;
-        if (id) {
+        if (!id) {
             console('ID customer can not null');
             return;
         }
