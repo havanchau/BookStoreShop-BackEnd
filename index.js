@@ -7,7 +7,6 @@ const userRoute = require('./routes/userRoute');
 
 var app = express();
 var bodyParser = require("body-parser");
-const dbConnect = require("./config/db.config");
 
 app.use(cors());
 app.use(bodyParser.json());
