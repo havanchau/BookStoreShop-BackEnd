@@ -1,6 +1,6 @@
 const User = require("../models/userModels");
 
-const getAllUser = (req, res) => {
+const getAllUser = async (req, res) => {
     User.getAllUser((err, data) => {
         if (err) {
             res.status(500).send({
@@ -12,7 +12,7 @@ const getAllUser = (req, res) => {
     });
 }
 
-const addNewUser = (req, res) => {
+const addNewUser = async (req, res) => {
     const newUser = new User(req.body);
 
     User.addNewUser(newUser, (err, data) => {

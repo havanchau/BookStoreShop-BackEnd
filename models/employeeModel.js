@@ -1,6 +1,6 @@
 const db = require("../config/db.config");
 
-class Employee {
+class Employee extends User {
     constructor(employee) {
         this.id = employee.id;
         this.fname = employee.fname;
@@ -158,6 +158,70 @@ class Employee {
         let query = "UPDATE Employees SET";
         let params = [];
 
+        if (fname) {
+            query += " Fname = ? ";
+            params.push(fname);
+        }
+
+        if (minit) {
+            query += " Minit = ? ";
+            params.push(minit);
+        }
+
+        if (lname) {
+            query += " Lname = ? ";
+            params.push(minit);
+        }
+
+        if (phone) {
+            query += " Phone = ? ";
+            params.push(phone);
+        }
+
+        if (startDate) {
+            query += " Employee_Start_Date = ? ";
+            params.push(startDate);
+        }
+
+        if (address) {
+            query += " Employee_Address = ? ";
+            params.push(address);
+        }
+
+        if (salary) {
+            query += " Salary = ? ";
+            params.push(salary);
+        }
+
+        if (numDayWorkOfMonth) {
+            query += " Number_Work_Days_Of_Month = ?";
+            params.push(numDayWorkOfMonth);
+        }
+
+        if (email) {
+            query += " Email = ? ";
+            params.push(email);
+        }
+
+        query = query.slice(0, -1) + " WHERE ID_Employee = ?";
+        params.push(id);
+
+
+        db.query(query, params, (err, res) => {
+            if (err) {
+                console.error("Error updating employee information: ", err);
+                result(err, null);
+                return;
+            }
+    
+            if (res.affectedRows == 0) {
+                result({ message: "Employee not found with ID: " + id }, null);
+                return;
+            }
+    
+            console.log("Updated employee information with ID: ", id);
+            result(null, res);
+        });
     }
 }
 

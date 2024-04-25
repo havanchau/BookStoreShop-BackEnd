@@ -12,81 +12,41 @@ class Book {
     this.ageRequirement = book.ageRequirement;
   }
 
-  static getBook(result) {
-    db.query("SELECT * FROM book", (err, res) => {
+  static getBooks(result, req = null) {
+    let queryParams = [];
+    let query = "SELECT * FROM books";
+
+    if (req) {
+      const conditions = [];
+
+      if (req.isbn) conditions.push("isbn = ?");
+      if (req.title) conditions.push("title = ?");
+      if (req.author) conditions.push("author = ?");
+      if (req.publisher) conditions.push("publisher = ?");
+      if (req.discount) conditions.push("discount = ?");
+      if (req.editionBook) conditions.push("editionBook = ?");
+      if (req.cost) conditions.push("cost = ?");
+      if (req.ageRequirement) conditions.push("ageRequirement = ?");
+
+      if (conditions.length > 0) {
+        query += " WHERE " + conditions.join(" AND ");
+        queryParams = Object.values(req);
+      }
+    }
+
+    db.query(query, (err, res) => {
       if (err) {
-        console.error("Error fetching books: ", err);
+        console.error("Error: ", err);
         result(err, null);
         return;
       }
 
-      console.log("Fetched books successfully");
+      console.log("Successfuully");
       result(null, res);
     });
   }
 
-  static getBookByISBN(isbn, result) {
-    db.query("SELECT * FROM Book WHERE ISBN = ?", isbn, (err, res) => {
-      if (err) {
-        console.error("Error fetching book by ISBN: ", err);
-        result(err, null);
-        return;
-      }
-
-      if (res.length) {
-        console.log("Fetched book by ISBN successfully");
-        result(null, res[0]);
-        return;
-      }
-
-      result({ message: "Book not found with ISBN: " + isbn }, null);
-    });
-  }
-
-  static getBookByAuthor(author, result) {
-    db.query("SELECT * FROM Book WHERE Author = ?", author, (err, res) => {
-      if (err) {
-        console.error("Error fetching book by author: ", err);
-        result(err, null);
-        return;
-      }
-
-      if (res.length) {
-        console.log("Fetched book by author successfully");
-        result(null, res[0]);
-        return;
-      }
-
-      result({ message: "Book not found with author: " + author }, null);
-    });
-  }
-
-  static getBookByInformation(information, result) {
-    db.query(
-      "SELECT * FROM Book WHERE CONCAT(ISBN, Title, Author, Publisher, Discount, Edition_Book, Cost, Age_requiremnt) LIKE CONCAT('%', ? '%')",
-      information,
-      (err, res) => {
-        if (err) {
-          console.error("Error fetching book by this information: ", err);
-          result(err, null);
-          return;
-        }
-
-        if (res.length) {
-          console.log("Fetched book by information successfully");
-          result(null, res[0]);
-          return;
-        }
-
-        result(
-          { message: "Book not found with this information: " + information },
-          null
-        );
-      }
-    );
-  }
-
-  static getTopBookSeller(topNumber, result) {
+  static getTopBooksSeller(topNumber, result) {
     db.query(
       `SELECT
                   b.ISBN,

@@ -1,6 +1,6 @@
 const db = require("../config/db.config")
 
-class Customer {
+class Customer extends User {
 
     constructor(customer) {
         this.id = customer.id;
