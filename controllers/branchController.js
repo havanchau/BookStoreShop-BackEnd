@@ -1,7 +1,7 @@
 const Branch = require("../models/branchsModel");
 
-const getAllBranch = async (req, res) => {
-    Branch.getAllBranch((err, data) => {
+const getBranchs = async (req, res) => {
+    Branch.getBranchs((err, data) => {
         if (err) {
             res.status(500).send({
                 message: err.message || "Some error occurred while get all branch."
@@ -14,6 +14,6 @@ const getAllBranch = async (req, res) => {
 
 
 module.exports = {
-    getAllBranch,
+    getBranchs,
     
 };

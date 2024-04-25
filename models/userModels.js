@@ -39,6 +39,23 @@ class User {
       result(null, res);
     });
   }
+
+  static createUser(result, user) {
+    db.query(
+      "INSERT INTO users (id, age, password, email, role) VALUES (?, ?, ?, ?, ?)",
+      [user.id, user.age, user.password, user.email, user.role],
+      (err, res) => {
+        if (err) {
+          console.error("Failed: ", err);
+          result(err, null);
+          return;
+        }
+
+        console.log("Created");
+        result(null, { user });
+      }
+    );
+  }
 }
 
 module.exports = User;
