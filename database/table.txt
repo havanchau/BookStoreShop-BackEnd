@@ -12,18 +12,29 @@ ON UPDATE CASCADE
 ON
 DELETE CASCADE );
 
-CREATE TABLE customers ( id VARCHAR(20) PRIMARY KEY NOT NULL, customerName VARCHAR(50) NOT NULL, physicalAddress VARCHAR(50), totalPayment FLOAT, userId VARCHAR(20) NOT NULL, FOREIGN KEY (userId) REFERENCES users(id)
-ON UPDATE CASCADE
-ON
-DELETE CASCADE );
+CREATE TABLE customers
+(
+	id VARCHAR(20) PRIMARY KEY NOT NULL,
+    customerName VARCHAR(50) NOT NULL,
+    physicalAddress VARCHAR(50),
+    totalPayment FLOAT,
+    userId VARCHAR(20) NOT NULL,
+    FOREIGN KEY (userId) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE
+);
 
-CREATE TABLE orders ( id VARCHAR(20) PRIMARY KEY NOT NULL, numberProduct INT NOT NULL, cost FLOAT NOT NULL, time_delivery DATE NOT NULL, customerId VARCHAR(20) NOT NULL, employeeId VARCHAR(20) NOT NULL, deliveryAddress VARCHAR(50), deliveryFee FLOAT FOREIGN KEY (customerId) REFERENCES customers(id)
-ON UPDATE CASCADE
-ON
-DELETE CASCADE, FOREIGN KEY (employeeId) REFERENCES employees(id)
-ON UPDATE CASCADE
-ON
-DELETE CASCADE, );
+CREATE TABLE orders
+(
+	id VARCHAR(20) PRIMARY KEY NOT NULL,
+    numberProduct INT NOT NULL,
+    cost FLOAT NOT NULL,
+    time_delivery DATE NOT NULL,
+    customerId VARCHAR(20) NOT NULL,
+    employeeId VARCHAR(20) NOT NULL,
+    deliveryAddress VARCHAR(50),
+    deliveryFee FLOAT,
+    FOREIGN KEY (customerId) REFERENCES customers(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (employeeId) REFERENCES employees(id) ON UPDATE CASCADE ON DELETE CASCADE
+);
 
 CREATE TABLE branchContainBooks ( idBranch VARCHAR(20) NOT NULL, isbn VARCHAR(20) NOT NULL, numberBook INT NOT NULL, PRIMARY KEY(idBranch, isbn), FOREIGN KEY (idBranch) REFERENCES branchs(id)
 ON UPDATE CASCADE
@@ -31,7 +42,7 @@ ON
 DELETE CASCADE, FOREIGN KEY (isbn) REFERENCES books(isbn)
 ON UPDATE CASCADE
 ON
-DELETE CASCADE )
+DELETE CASCADE );
 
 CREATE TABLE orderContainBooks ( idOrder VARCHAR(20), isbn VARCHAR(20), numberBook INT, PRIMARY KEY (idOrder, isbn), FOREIGN KEY (idOrder) REFERENCES orders(id)
 ON UPDATE CASCADE
@@ -94,7 +105,7 @@ ON UPDATE CASCADE
 ON
 DELETE CASCADE );
 
-CREATE TABLE transportTos ( idWarehouse VARCHAR(20) NOT NULL, idPackage VARCHAR(20) NOT NULL, arrivalTime DATE NOT NULL, PRIMARY KEY (ID_Ware_House, ID_Package), FOREIGN KEY (idWarehouse) REFERENCES warehouses(id)
+CREATE TABLE transportTos ( idWarehouse VARCHAR(20) NOT NULL, idPackage VARCHAR(20) NOT NULL, arrivalTime DATE NOT NULL, PRIMARY KEY (idWarehouse, idPackage), FOREIGN KEY (idWarehouse) REFERENCES warehouses(id)
 ON UPDATE CASCADE
 ON
 DELETE CASCADE, FOREIGN KEY (idPackage) REFERENCES packages(id)
@@ -102,7 +113,7 @@ ON UPDATE CASCADE
 ON
 DELETE CASCADE );
 
-CREATE TABLE transportFroms ( idWarehouse VARCHAR(20) NOT NULL, idPackage VARCHAR(20) NOT NULL, departureTime DATE NOT NULL, PRIMARY KEY (ID_Ware_House, ID_Package), FOREIGN KEY (idWarehouse) REFERENCES warehouses(id)
+CREATE TABLE transportFroms ( idWarehouse VARCHAR(20) NOT NULL, idPackage VARCHAR(20) NOT NULL, departureTime DATE NOT NULL, PRIMARY KEY (idWarehouse, idPackage), FOREIGN KEY (idWarehouse) REFERENCES warehouses(id)
 ON UPDATE CASCADE
 ON
 DELETE CASCADE, FOREIGN KEY (idPackage) REFERENCES packages(id)
@@ -121,7 +132,7 @@ DELETE CASCADE, PRIMARY KEY (idShipper, idPackage) );
 CREATE TABLE shipPackageTo ( idShipper VARCHAR(20) NOT NULL, idCustomer VARCHAR(20) NOT NULL, timeShip DATE NOT NULL, FOREIGN KEY (idShipper) REFERENCES shippers(id)
 ON UPDATE CASCADE
 ON
-DELETE CASCADE, FOREIGN KEY (idCustomer) REFERENCES customers(idCustomer)
+DELETE CASCADE, FOREIGN KEY (idCustomer) REFERENCES customers(id)
 ON UPDATE CASCADE
 ON
 DELETE CASCADE, PRIMARY KEY (idShipper, idCustomer) );
