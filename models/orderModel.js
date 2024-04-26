@@ -64,8 +64,6 @@ class Order {
     );
   }
 
-  static editInfoOrder(order, result) {}
-
   static deleteOrderById(id) {}
 }
 

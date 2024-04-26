@@ -3,10 +3,10 @@ const db = require("../config/db.config");
 class Employee extends User {
     constructor(employee) {
         this.id = employee.id;
-        this.name = employee.name;
+        this.employeeName = employee.employeeName;
         this.phone = employee.phone;
         this.startDate = employee.startDate;
-        this.address = employee.address;
+        this.employeeAddress = employee.employeeAddress;
         this.salary = employee.salary;
         this.idBranch = employee.idBranch;
         this.numDayWorkOfMonth = employee.numDayWorkOfMonth;

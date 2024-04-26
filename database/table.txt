@@ -25,7 +25,15 @@ ON UPDATE CASCADE
 ON
 DELETE CASCADE, );
 
-CREATE TABLE order_contain_book ( idOrder VARCHAR(20), isbn VARCHAR(20), numberBook INT, PRIMARY KEY (idOrder, isbn), FOREIGN KEY (idOrder) REFERENCES orders(id)
+CREATE TABLE branchContainBooks ( idBranch VARCHAR(20) NOT NULL, isbn VARCHAR(20) NOT NULL, numberBook INT NOT NULL, PRIMARY KEY(idBranch, isbn), FOREIGN KEY (idBranch) REFERENCES branchs(id)
+ON UPDATE CASCADE
+ON
+DELETE CASCADE, FOREIGN KEY (isbn) REFERENCES books(isbn)
+ON UPDATE CASCADE
+ON
+DELETE CASCADE )
+
+CREATE TABLE orderContainBooks ( idOrder VARCHAR(20), isbn VARCHAR(20), numberBook INT, PRIMARY KEY (idOrder, isbn), FOREIGN KEY (idOrder) REFERENCES orders(id)
 ON UPDATE CASCADE
 ON
 DELETE CASCADE, FOREIGN KEY (isbn) REFERENCES books(isbn)

@@ -4,7 +4,7 @@ const sendMail = require("../../mail/send.mail");
 
 const sendMailToUser = async (req) => {
   try {
-    const { email, subject, html } = await req.json()
+    const { email, subject, html } = await req.json();
     await sendMail({ email, subject, html });
     return NextResponse.json({ message: "Created" }, { status: 200 });
   } catch (error) {
@@ -14,5 +14,5 @@ const sendMailToUser = async (req) => {
 };
 
 module.exports = {
-    sendMailToUser,
-}
+  sendMailToUser,
+};

@@ -6,40 +6,6 @@ const jwt = require("jsonwebtoken");
 
 const User = require("../models/userModel");
 
-const signup = async (req, res, next) => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      const error = new Error("Validation failed");
-      error.statusCode = 422;
-      error.data = errors.array();
-      throw error;
-    }
-
-    const { age, password, email, role } = req.body;
-
-    const hashedPassword = await bcrypt.hash(password, 12);
-    const id = uuidv4();
-
-    const user = new User({
-      id,
-      age,
-      password: hashedPassword,
-      email,
-      role,
-    });
-
-    User.createUser(newUser, (err, result) => {
-      res.status(201).json({ message: "Created", user: result });
-    });
-  } catch (err) {
-    if (!err.statusCode) {
-      err.statusCode = 500;
-    }
-    next(err);
-  }
-};
-
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -80,6 +46,5 @@ const login = async (req, res, next) => {
 };
 
 module.exports = {
-  signup,
   login,
 };

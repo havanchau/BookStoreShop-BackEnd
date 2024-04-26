@@ -4,7 +4,7 @@ class Customer extends User {
 
     constructor(customer) {
         this.id = customer.id;
-        this.name = customer.name;
+        this.customerName = customer.customerName;
         this.physicalAddress = customer.physicalAddress;
         this.totalPayment = customer.totalPayment;
     }

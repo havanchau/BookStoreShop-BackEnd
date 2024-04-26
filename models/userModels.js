@@ -4,9 +4,10 @@ class User {
   constructor(user) {
     this.id = user.id;
     this.age = user.age;
-    this.password = user.password;
+    this.userPassword = user.userPassword;
     this.email = user.email;
-    this.role = user.role;
+    this.userRole = user.userRole;
+    this.verified = user.verified
   }
 
   static getUsers(result, req = null) {
@@ -18,9 +19,10 @@ class User {
 
       if (req.id) conditions.push("id = ?");
       if (req.age) conditions.push("age = ?");
-      if (req.password) conditions.push("password = ?");
+      if (req.userPassword) conditions.push("userPassword = ?");
       if (req.email) conditions.push("email = ?");
-      if (req.role) conditions.push("role = ?");
+      if (req.userRole) conditions.push("userRole = ?");
+      if (req.verified) conditions.push("verified = ?")
 
       if (conditions.length > 0) {
         query += " WHERE " + conditions.join(" AND ");
@@ -42,8 +44,8 @@ class User {
 
   static createUser(result, user) {
     db.query(
-      "INSERT INTO users (id, age, password, email, role) VALUES (?, ?, ?, ?, ?)",
-      [user.id, user.age, user.password, user.email, user.role],
+      "INSERT INTO users (id, age, userPassword, email, userRole, verified) VALUES (?, ?, ?, ?, ?, ?)",
+      [user.id, user.age, user.userPassword, user.email, user.userRole],
       (err, res) => {
         if (err) {
           console.error("Failed: ", err);

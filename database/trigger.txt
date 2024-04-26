@@ -1,0 +1,95 @@
+DELIMITER //
+
+    CREATE TRIGGER BeforeInsertOrderContainBook
+    BEFORE INSERT ON orders
+    FOR EACH ROW
+    BEGIN
+        DECLARE customer_age INT;
+    
+        SELECT age INTO customer_age
+        FROM users u
+        JOIN customers c ON u.id = c.userId
+        JOIN orders o ON c.id = o.customerId
+        WHERE o.id = NEW.id;
+    
+        IF NEW.isbn IN (SELECT isbn FROM books WHERE ageRequirement IS 
+        NOT NULL) AND customer_age IS NOT NULL THEN
+            IF EXISTS (
+                SELECT 1
+                FROM Book
+                WHERE ISBN = NEW.ISBN AND ageRequirement > customer_age
+            ) THEN
+                SIGNAL SQLSTATE '45000'
+                SET MESSAGE_TEXT = 'Khach hang khong du tuoi de mua sach nay.';
+            END IF;
+        END IF;
+    END //
+    
+DELIMITER ;
+
+
+DELIMITER //
+
+    CREATE TRIGGER AfterInsertOrderUdateTotalPayment
+    AFTER INSERT ON orders
+    FOR EACH ROW
+    BEGIN
+        DECLARE order_total_cost FLOAT;
+        DECLARE customer_id VARCHAR(20);
+    
+        SELECT cost, customerId INTO order_total_cost, customer_id
+        FROM orders
+        WHERE id = NEW.id;
+    
+        UPDATE Customer
+        SET totalPayment = totalPayment + order_total_cost
+        WHERE id = customer_id;
+    END //
+    
+DELIMITER ;
+
+DELIMITER //
+
+    CREATE TRIGGER BeforeInsertOrdersToUpdateTotalCost
+    BEFORE INSERT ON orders
+    FOR EACH ROW
+    BEGIN
+        DECLARE bookCost FLOAT;
+        SELECT cost INTO bookCost
+        FROM books
+        WHERE isbn = NEW.isbn
+        LIMIT 1; 
+        
+        UPDATE orders
+        SET cost = cost + (bookCost * NEW.numberBook * 
+        (1 - bookDiscount)),
+          numberProduct = numberProduct + NEW.numberBook
+        WHERE id = NEW.id;
+    END;
+    
+    //
+    
+DELIMITER ;
+
+DELIMITER //
+
+    CREATE TRIGGER BeforeDeleteOrdersToUpdateTotalCost
+    BEFORE DELETE ON orders
+    FOR EACH ROW
+    BEGIN
+        DECLARE bookCost FLOAT;
+        SELECT cost INTO bookCost
+        FROM books
+        WHERE isbn = NEW.isbn
+        LIMIT 1; 
+        
+        UPDATE orders
+        SET cost = cost - (bookCost * NEW.numberBook * 
+        (1 - bookDiscount)),
+          numberProduct = numberProduct - NEW.numberBook
+        WHERE id = NEW.id;
+    END;
+    
+    //
+    
+DELIMITER ;
